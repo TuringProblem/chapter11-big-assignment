@@ -1,6 +1,10 @@
 package src;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class MainLogic {
+    Scanner KEYBOARD = new Scanner(System.in);
     /**
      * Write a static recursive method that computes the sum of the integers between two numbers k1 and k2 (including both k1 and k2).
      * For example, the sum of the numbers between 1 and 5 is 1+2+3+4+5 = 15.
@@ -8,15 +12,15 @@ public class MainLogic {
      */
 
     /**
+     * Use of Ternary operator for the cases.
      * if k1 > k2 then ret: 0
      * else if k1 equals k2 return k1
      * else return the recurssion of k1 + value of k1 + 1 + k2
      */
-    public int sumOfIntegers(int k1, int k2) {
-        return k1 > k2 ? 0 : k1 == k2 ? k1 : k1 + sumOfIntegers(k1 + 1, k2);
-    }
+    public int sumOfIntegers(int k1, int k2) { return k1 > k2 ? 0 : k1 == k2 ? k1 : k1 + sumOfIntegers(k1 + 1, k2); }
 
     /**
+     * Use of ternary operator for  each cases.
      * Write a static recursive method that returns the sum of the integers
      * in the array of int values passed to it as a single argument.
      * Test your method in a program that prompts the user to input the length of the array,
@@ -24,7 +28,12 @@ public class MainLogic {
      * Then, it should print the sum of the array using the recursive method you wrote.
      */
 
-    public int sumArray(int[] array, int length) {
-        return length == 0 ? 0 : sumArray(array, length - 1) + array[length - 1];
+    public int sumArray(ArrayList<Integer> array, int length) {
+        return length == 0 ? 0 : sumArray(array, length - 1) + array.get(length - 1);
+    }
+
+    public static void logic() {
+        ArrayList<Integer> array = new ArrayList<>();
+
     }
 }
