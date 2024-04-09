@@ -1,10 +1,19 @@
 package src;
-
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * @author Override
+ * @since 04/06/2024 @12:25
+ * @see <a href="https://Github.com/TuringProblem">GitHub Profile</a>
+ */
+
 public class MainLogic {
-    Scanner KEYBOARD = new Scanner(System.in);
+    static Scanner KEYBOARD = new Scanner(System.in);
+    private int valuePassed;
+    private int secondValuePassed;
+    private final String outputError = "That value is not an Int\n please make sure that you use an Int and not: \n";
     /**
      * Write a static recursive method that computes the sum of the integers between two numbers k1 and k2 (including both k1 and k2).
      * For example, the sum of the numbers between 1 and 5 is 1+2+3+4+5 = 15.
@@ -32,8 +41,50 @@ public class MainLogic {
         return length == 0 ? 0 : sumArray(array, length - 1) + array.get(length - 1);
     }
 
-    public static void logic() {
+    public void logic() throws InvalidNumberException {
         ArrayList<Integer> array = new ArrayList<>();
+
+        try {
+            System.out.println("Please enter whether you want the [Sum] or [SumArray]: ");
+            String userInput = KEYBOARD.nextLine();
+            if (userInput.equalsIgnoreCase("sum")) {
+                sum();
+            } else if (userInput.equalsIgnoreCase("sumarray")) {
+                sumArray();
+            } else {
+                throw new InvalidNumberException("Incorrect value passed\n");
+            }
+        } catch (InvalidNumberException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void sum() {
+        try {
+            System.out.println("Please enter the first number: ");
+            valuePassed = KEYBOARD.nextInt();
+
+            System.out.println("Enter a second value: ");
+            secondValuePassed = KEYBOARD.nextInt();
+
+        } catch(InputMismatchException e) {
+            System.out.println(outputError);
+            System.out.println(e.getMessage());
+            KEYBOARD.nextLine();
+            sum();
+        }
+        System.out.println(sumOfIntegers(valuePassed, secondValuePassed));
+    }
+    public void sumArray() {
+        try {
+            System.out.println("Please enter the first number: ");
+            valuePassed = KEYBOARD.nextInt();
+
+            System.out.println("Please enter the second value: ");
+            secondValuePassed = KEYBOARD.nextInt();
+        } catch(InputMismatchException e) {
+            System.out.println(outputError);
+            System.out.println(e.getMessage());
+        }
 
     }
 }
