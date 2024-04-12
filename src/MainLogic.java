@@ -48,7 +48,7 @@ public class MainLogic {
             System.out.println("Please enter whether you want the [Sum] or [SumArray]: ");
             String userInput = KEYBOARD.nextLine();
             if (userInput.equalsIgnoreCase("sum")) {
-                sum();
+                sum(true);
             } else if (userInput.equalsIgnoreCase("sumarray")) {
                 sumArray();
             } else {
@@ -58,19 +58,33 @@ public class MainLogic {
             System.out.println(e.getMessage());
         }
     }
-    public void sum() {
-        try {
-            System.out.println("Please enter the first number: ");
-            valuePassed = KEYBOARD.nextInt();
-
-            System.out.println("Enter a second value: ");
-            secondValuePassed = KEYBOARD.nextInt();
-
-        } catch(InputMismatchException e) {
-            System.out.println(outputError);
-            System.out.println(e.getMessage());
-            KEYBOARD.nextLine();
-            sum();
+    public void sum(boolean firstOrSecondNumber) {
+        if (firstOrSecondNumber) {
+            try {
+                System.out.println("Please enter the first number: ");
+                valuePassed = KEYBOARD.nextInt();
+                if (valuePassed < 0) {
+                    throw new InputMismatchException(outputError);
+                }
+            } catch (InputMismatchException e) {
+                //System.out.println(outputError);
+                System.out.println(e.getMessage());
+                KEYBOARD.nextLine();
+                sum(true);
+            }
+            sum(false);
+        } else {
+            try {
+                System.out.println("Enter a second value: ");
+                secondValuePassed = KEYBOARD.nextInt();
+                if (secondValuePassed < 0) {
+                    throw new InputMismatchException(outputError);
+                }
+            } catch(InputMismatchException e) {
+                System.out.println(e.getMessage());
+                KEYBOARD.nextLine();
+                sum(false);
+            }
         }
         System.out.println(sumOfIntegers(valuePassed, secondValuePassed));
     }
@@ -78,7 +92,6 @@ public class MainLogic {
         try {
             System.out.println("Please enter the first number: ");
             valuePassed = KEYBOARD.nextInt();
-
             System.out.println("Please enter the second value: ");
             secondValuePassed = KEYBOARD.nextInt();
         } catch(InputMismatchException e) {
