@@ -1,4 +1,5 @@
 package src;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -14,6 +15,8 @@ public class MainLogic {
     private int valuePassed;
     private int secondValuePassed;
     private final String outputError = "That value is not an Int\n please make sure that you use an Int and not: \n";
+    private final String firstValuePrompt = "Please enter the first number: ";
+    private final String secondValuePrompt = "Enter a second value: ";
     /**
      * Write a static recursive method that computes the sum of the integers between two numbers k1 and k2 (including both k1 and k2).
      * For example, the sum of the numbers between 1 and 5 is 1+2+3+4+5 = 15.
@@ -61,7 +64,7 @@ public class MainLogic {
     public void sum(boolean firstOrSecondNumber) {
         if (firstOrSecondNumber) {
             try {
-                System.out.println("Please enter the first number: ");
+                System.out.println(firstValuePrompt);
                 valuePassed = KEYBOARD.nextInt();
                 if (valuePassed < 0) {
                     throw new InputMismatchException(outputError);
@@ -75,7 +78,7 @@ public class MainLogic {
             sum(false);
         } else {
             try {
-                System.out.println("Enter a second value: ");
+                System.out.println(secondValuePrompt);
                 secondValuePassed = KEYBOARD.nextInt();
                 if (secondValuePassed < 0) {
                     throw new InputMismatchException(outputError);
@@ -88,16 +91,40 @@ public class MainLogic {
         }
         System.out.println(sumOfIntegers(valuePassed, secondValuePassed));
     }
+
+    //TODO: NEED TO ADD ARRAYLIST INTO THE VALUES THAT ARE NEEDED TO BE PASSED FROM THE USER
     public void sumArray() {
+        ArrayList<Integer> userArray = new ArrayList<>();
         try {
-            System.out.println("Please enter the first number: ");
+            System.out.println(firstValuePrompt);
             valuePassed = KEYBOARD.nextInt();
-            System.out.println("Please enter the second value: ");
-            secondValuePassed = KEYBOARD.nextInt();
+            for (int i = 0; i < valuePassed; i++) {
+                System.out.printf("Please enter the [%d%s] index: ", i, indexSuffix(i));
+                userArray.add(KEYBOARD.nextInt());
+            }
+
         } catch(InputMismatchException e) {
             System.out.println(outputError);
             System.out.println(e.getMessage());
         }
+        try {
+            System.out.println(secondValuePrompt);
+            secondValuePassed = KEYBOARD.nextInt();
+            if (secondValuePassed < 0) {
+                throw new InputMismatchException();
+            }
+        } catch(InputMismatchException e) {
+            System.out.println(e.getMessage());
+        }
+       // return sumArray(valuePassed,  secondValuePassed);
+    }
 
+    public String indexSuffix(int value) {
+        return switch (value) {
+            case 1, 21, 31, 41, 51 -> "st";
+            case 2, 22, 32, 42, 52 -> "nd";
+            case 3, 23, 33, 43, 53 -> "rd";
+            default -> "th";
+        };
     }
 }
