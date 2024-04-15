@@ -2,7 +2,10 @@ package src;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author Override
@@ -14,9 +17,9 @@ public class MainLogic {
     static Scanner KEYBOARD = new Scanner(System.in);
     private int valuePassed;
     private int secondValuePassed;
-    private final String outputError = "That value is not an Int\n please make sure that you use an Int and not: \n";
-    private final String firstValuePrompt = "Please enter the first number: ";
-    private final String secondValuePrompt = "Enter a second value: ";
+    private static final String ERROR = "That value is not an Int\n please make sure that you use an Int and not: \n";
+    private static final String FIRST = "Please enter the first number: ";
+    private static  final String SECOND = "Enter a second value: ";
     /**
      * Write a static recursive method that computes the sum of the integers between two numbers k1 and k2 (including both k1 and k2).
      * For example, the sum of the numbers between 1 and 5 is 1+2+3+4+5 = 15.
@@ -27,12 +30,12 @@ public class MainLogic {
      * Use of Ternary operator for the cases.
      * if k1 > k2 then ret: 0
      * else if k1 equals k2 return k1
-     * else return the recurssion of k1 + value of k1 + 1 + k2
+     * else return the recursion of k1 + value of k1 + 1 + k2
      */
     public int sumOfIntegers(int k1, int k2) { return k1 > k2 ? 0 : k1 == k2 ? k1 : k1 + sumOfIntegers(k1 + 1, k2); }
 
     /**
-     * Use of ternary operator for  each cases.
+     * Use of ternary operator for each case.
      * Write a static recursive method that returns the sum of the integers
      * in the array of int values passed to it as a single argument.
      * Test your method in a program that prompts the user to input the length of the array,
@@ -40,37 +43,35 @@ public class MainLogic {
      * Then, it should print the sum of the array using the recursive method you wrote.
      */
 
-    public int sumArray(ArrayList<Integer> array, int length) {
+    public int sumArray(List<Integer> array, int length) {
         return length == 0 ? 0 : sumArray(array, length - 1) + array.get(length - 1);
     }
 
     public void logic() throws InvalidNumberException {
-        ArrayList<Integer> array = new ArrayList<>();
-
         try {
-            System.out.println("Please enter whether you want the [Sum] or [SumArray]: ");
+            System.out.println("Please enter whether you want the sum of [Integers] or [Array]: ");
             String userInput = KEYBOARD.nextLine();
-            if (userInput.equalsIgnoreCase("sum")) {
+            if (userInput.equalsIgnoreCase("integers") || userInput.equalsIgnoreCase("int")) {
                 sum(true);
-            } else if (userInput.equalsIgnoreCase("sumarray")) {
+            } else if (userInput.equalsIgnoreCase("array")) {
                 sumArray();
             } else {
                 throw new InvalidNumberException("Incorrect value passed\n");
             }
         } catch (InvalidNumberException e) {
             System.out.println(e.getMessage());
+            logic();
         }
     }
     public void sum(boolean firstOrSecondNumber) {
         if (firstOrSecondNumber) {
             try {
-                System.out.println(firstValuePrompt);
+                System.out.println(FIRST);
                 valuePassed = KEYBOARD.nextInt();
                 if (valuePassed < 0) {
-                    throw new InputMismatchException(outputError);
+                    throw new InputMismatchException(ERROR);
                 }
             } catch (InputMismatchException e) {
-                //System.out.println(outputError);
                 System.out.println(e.getMessage());
                 KEYBOARD.nextLine();
                 sum(true);
@@ -78,45 +79,52 @@ public class MainLogic {
             sum(false);
         } else {
             try {
-                System.out.println(secondValuePrompt);
+                System.out.println(SECOND);
                 secondValuePassed = KEYBOARD.nextInt();
                 if (secondValuePassed < 0) {
-                    throw new InputMismatchException(outputError);
+                    throw new InputMismatchException(ERROR);
                 }
-            } catch(InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println(e.getMessage());
                 KEYBOARD.nextLine();
                 sum(false);
             }
+            System.out.printf("The Sum of %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
+
         }
-        System.out.println(sumOfIntegers(valuePassed, secondValuePassed));
     }
 
-    //TODO: NEED TO ADD ARRAYLIST INTO THE VALUES THAT ARE NEEDED TO BE PASSED FROM THE USER
-    public void sumArray() {
-        ArrayList<Integer> userArray = new ArrayList<>();
-        try {
-            System.out.println(firstValuePrompt);
-            valuePassed = KEYBOARD.nextInt();
-            for (int i = 0; i < valuePassed; i++) {
-                System.out.printf("Please enter the [%d%s] index: ", i, indexSuffix(i));
-                userArray.add(KEYBOARD.nextInt());
-            }
+    /**
+     * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html">Java Streams api</a> ->
+     * Using List to pipeline the data collected from the user, instead of Array for efficiency.
+     * @see <a href="
+     */
 
-        } catch(InputMismatchException e) {
-            System.out.println(outputError);
-            System.out.println(e.getMessage());
-        }
+    public void sumArray() {
         try {
-            System.out.println(secondValuePrompt);
-            secondValuePassed = KEYBOARD.nextInt();
-            if (secondValuePassed < 0) {
-                throw new InputMismatchException();
+            System.out.println("Enter the elements: ");
+            int n = KEYBOARD.nextInt();
+            if (n < 0) {
+                throw new InputMismatchException(ERROR);
+            } else {
+                List<Integer> userNumbers = IntStream.range(0,n)
+                        .mapToObj(i ->  {
+                            System.out.printf("Enter element [%d]%s:\n", i, indexSuffix(i));
+                            int usersInt = KEYBOARD.nextInt();
+                            while (usersInt < 0) {
+                                System.out.println("That's not a valid number!\n please use a positive value!");
+                                usersInt = KEYBOARD.nextInt();
+                            }
+                            return usersInt;
+                        }).toList();
+                int sum = sumArray(userNumbers, n);
+                System.out.printf("The sum of the Array from %d  is: %d\n", n, sum);
             }
         } catch(InputMismatchException e) {
             System.out.println(e.getMessage());
+            KEYBOARD.nextLine();
+            sumArray();
         }
-       // return sumArray(valuePassed,  secondValuePassed);
     }
 
     public String indexSuffix(int value) {
