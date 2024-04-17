@@ -1,10 +1,5 @@
 package src;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -43,9 +38,7 @@ public class MainLogic {
      * Then, it should print the sum of the array using the recursive method you wrote.
      */
 
-    public int sumArray(List<Integer> array, int length) {
-        return length == 0 ? 0 : sumArray(array, length - 1) + array.get(length - 1);
-    }
+    public int sumArray(int[] array, int length) { return length == 0 ? 0 : sumArray(array, length - 1) + array[length - 1]; }
 
     public void logic() throws InvalidNumberException {
         try {
@@ -104,34 +97,36 @@ public class MainLogic {
         try {
             System.out.println("Enter the elements: ");
             int n = KEYBOARD.nextInt();
-            if (n < 0) {
-                throw new InputMismatchException(ERROR);
-            } else {
-                List<Integer> userNumbers = IntStream.range(0,n)
-                        .mapToObj(i ->  {
-                            System.out.printf("Enter element [%d]%s:\n", i, indexSuffix(i));
-                            int usersInt = KEYBOARD.nextInt();
-                            while (usersInt < 0) {
-                                System.out.println("That's not a valid number!\n please use a positive value!");
-                                usersInt = KEYBOARD.nextInt();
-                            }
-                            return usersInt;
-                        }).toList();
-                int sum = sumArray(userNumbers, n);
-                System.out.printf("The sum of the Array from %d  is: %d\n", n, sum);
-            }
-        } catch(InputMismatchException e) {
+            if (n < 0 || n > 50) { throw new InputMismatchException(ERROR); }
+            int[] num = IntStream.range(0, n).map(i -> {
+                System.out.printf("Enter element: [%d]%s\n", i, indexSuffix(i));
+                int userInt = KEYBOARD.nextInt();
+                while (userInt < 0) {
+                    System.out.printf("That's not a valid number\nPlease Enter a value greater than %d: %n", userInt);
+                    userInt = KEYBOARD.nextInt();
+                }
+                return userInt;
+            }).toArray();
+            int sum = sumArray(num, n);
+            System.out.printf("The sum of the Array from %d  is: %d\n", n, sum);
+
+        } catch (InputMismatchException e) {
             System.out.println(e.getMessage());
             KEYBOARD.nextLine();
             sumArray();
         }
     }
 
+    /**
+     * @param value -> The value of the index that the users
+     * @return -> The corresponding suffix for the value that we are on.
+     */
+
     public String indexSuffix(int value) {
         return switch (value) {
-            case 1, 21, 31, 41, 51 -> "st";
-            case 2, 22, 32, 42, 52 -> "nd";
-            case 3, 23, 33, 43, 53 -> "rd";
+            case 1, 21, 31, 41 -> "st";
+            case 2, 22, 32, 42 -> "nd";
+            case 3, 23, 33, 43 -> "rd";
             default -> "th";
         };
     }
