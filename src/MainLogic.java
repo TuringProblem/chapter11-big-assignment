@@ -16,12 +16,6 @@ public class MainLogic {
     private static final String FIRST = "Please enter the first number: ";
     private static  final String SECOND = "Enter a second value: ";
     /**
-     * Write a static recursive method that computes the sum of the integers between two numbers k1 and k2 (including both k1 and k2).
-     * For example, the sum of the numbers between 1 and 5 is 1+2+3+4+5 = 15.
-     * Test your method in a program that prompts the user to input both integers and then print out the sum of all the integers between the two numbers.
-     */
-
-    /**
      * Use of Ternary operator for the cases.
      * if k1 > k2 then ret: 0
      * else if k1 equals k2 return k1
@@ -40,6 +34,12 @@ public class MainLogic {
 
     public int sumArray(int[] array, int length) { return length == 0 ? 0 : sumArray(array, length - 1) + array[length - 1]; }
 
+    /**
+     * @throws InvalidNumberException -> Exception to check and make sure that the user is inputting the correct values
+     * for "int" or "integer" {@link #sum(boolean)} -> Handles the sum of the integers passed from the user.
+     * for "Array" or "array" {@link #sumArray()} -> Handles the sum of the Array passed from the user.
+     */
+
     public void logic() throws InvalidNumberException {
         try {
             System.out.println("Please enter whether you want the sum of [Integers] or [Array]: ");
@@ -56,6 +56,12 @@ public class MainLogic {
             logic();
         }
     }
+
+    /**
+     * Using -> {@link #sum(boolean)} -> This handles the logic behind {@link #sumOfIntegers(int, int)}
+     * @param firstOrSecondNumber -> Boolean value that checks which section the user is at.
+     */
+
     public void sum(boolean firstOrSecondNumber) {
         if (firstOrSecondNumber) {
             try {
@@ -90,7 +96,7 @@ public class MainLogic {
     /**
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html">Java Streams api</a> ->
      * Using List to pipeline the data collected from the user, instead of Array for efficiency.
-     * @see <a href="
+     * @see <a href=""></a>
      */
 
     public void sumArray() {
