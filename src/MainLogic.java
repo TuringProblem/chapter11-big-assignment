@@ -10,9 +10,10 @@ import java.util.stream.IntStream;
 
 public class MainLogic {
     static Scanner KEYBOARD = new Scanner(System.in);
-    private int valuePassed;
-    private int secondValuePassed;
-    private static final String ERROR = "That value is not an Int\n please make sure that you use an Int and not: \n";
+    private int valuePassed; //First value that's passed by the user
+    private int secondValuePassed; //Second value that's passed by the user
+    public String userInput;
+    private static final String ERROR = "That value is not an Int\n please make sure that your value is no: \n"; //TODO: FIX THIS AND ADD ANOTHER ERROR MESSAGE SO IM NOT USING THE SAME ONE
     private static final String FIRST = "Please enter the first number: ";
     private static  final String SECOND = "Enter a second value: ";
     /**
@@ -43,10 +44,10 @@ public class MainLogic {
     public void logic() throws InvalidNumberException {
         try {
             System.out.println("Please enter whether you want the sum of [Integers] or [Array]: ");
-            String userInput = KEYBOARD.nextLine();
-            if (userInput.equalsIgnoreCase("integers") || userInput.equalsIgnoreCase("int")) {
+            userInput = KEYBOARD.nextLine();
+            if (userInput.equalsIgnoreCase("integers") || userInput.equalsIgnoreCase("int") || userInput.equalsIgnoreCase("integer")) {
                 sum(true);
-            } else if (userInput.equalsIgnoreCase("array")) {
+            } else if (userInput.equalsIgnoreCase("array") || userInput.equalsIgnoreCase("arrays")) {
                 sumArray();
             } else {
                 throw new InvalidNumberException("Incorrect value passed\n");
@@ -54,6 +55,15 @@ public class MainLogic {
         } catch (InvalidNumberException e) {
             System.out.println(e.getMessage());
             logic();
+        }
+        KEYBOARD.nextLine();
+        System.out.println("Would you like to go again?\n[Yes or No]: ");
+        userInput = KEYBOARD.nextLine();
+        if (userInput.equalsIgnoreCase("yes")) {
+            logic();
+        } else {
+            System.out.println("Thank you for playing!\n");
+            System.exit(0);
         }
     }
 
@@ -95,7 +105,7 @@ public class MainLogic {
 
     /**
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html">Java Streams api</a> ->
-     * Using List to pipeline the data collected from the user, instead of Array for efficiency.
+      Using List to pipeline the data collected from the user, instead of Array for efficiency.
      * @see <a href=""></a>
      */
 
@@ -115,7 +125,6 @@ public class MainLogic {
             }).toArray();
             int sum = sumArray(num, n);
             System.out.printf("The sum of the Array from %d  is: %d\n", n, sum);
-
         } catch (InputMismatchException e) {
             System.out.println(e.getMessage());
             KEYBOARD.nextLine();
