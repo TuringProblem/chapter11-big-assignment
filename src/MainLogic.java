@@ -9,20 +9,27 @@ import java.util.stream.IntStream;
  */
 
 public class MainLogic {
-    static Scanner KEYBOARD = new Scanner(System.in);
+    Scanner KEYBOARD = new Scanner(System.in);
     private int valuePassed; //First value that's passed by the user
     private int secondValuePassed; //Second value that's passed by the user
     public String userInput;
-    private static final String ERROR = "That value is not an Int\n please make sure that your value is no: \n"; //TODO: FIX THIS AND ADD ANOTHER ERROR MESSAGE SO IM NOT USING THE SAME ONE
-    private static final String FIRST = "Please enter the first number: ";
-    private static  final String SECOND = "Enter a second value: ";
+    private  final String ERROR = "That value is not an Int\nPlease make sure your input is a valid integer\n"; //TODO: FIX THIS AND ADD ANOTHER ERROR MESSAGE SO IM NOT USING THE SAME ONE
+    public final String SECOND_ERROR = "Please enter a value that greater than: ";
+    private  final String FIRST = "Please enter the first number: ";
+    private final String SECOND = "Enter a second value: ";
+    private final String SECOND_ATTEMPT = "This is your last attempt\nPlease make sure to input the correct value\n";
     /**
      * Use of Ternary operator for the cases.
      * if k1 > k2 then ret: 0
      * else if k1 equals k2 return k1
      * else return the recursion of k1 + value of k1 + 1 + k2
      */
-    public int sumOfIntegers(int k1, int k2) { return k1 > k2 ? 0 : k1 == k2 ? k1 : k1 + sumOfIntegers(k1 + 1, k2); }
+
+    //TODO -> MAKE SURE THAT THE INTEGER VALUE
+
+    public int sumOfIntegers(int nOne, int nTwo) { return nOne > nTwo ? sumOfIntegers(nOne - 1, nTwo += nOne) : nOne == nTwo ? nOne : nTwo + sumOfIntegers(nOne + 1, nTwo); }
+
+
 
     /**
      * Use of ternary operator for each case.
@@ -38,7 +45,7 @@ public class MainLogic {
     /**
      * @throws InvalidNumberException -> Exception to check and make sure that the user is inputting the correct values
      * for "int" or "integer" {@link #sum(boolean)} -> Handles the sum of the integers passed from the user.
-     * for "Array" or "array" {@link #sumArray()} -> Handles the sum of the Array passed from the user.
+     * for "Array" or "array" {@link #sumArrayHandler()} -> Handles the sum of the Array passed from the user.
      */
 
     public void logic() throws InvalidNumberException {
@@ -48,7 +55,7 @@ public class MainLogic {
             if (userInput.equalsIgnoreCase("integers") || userInput.equalsIgnoreCase("int") || userInput.equalsIgnoreCase("integer")) {
                 sum(true);
             } else if (userInput.equalsIgnoreCase("array") || userInput.equalsIgnoreCase("arrays")) {
-                sumArray();
+                sumArrayHandler();
             } else {
                 throw new InvalidNumberException("Incorrect value passed\n");
             }
@@ -72,36 +79,67 @@ public class MainLogic {
      * @param firstOrSecondNumber -> Boolean value that checks which section the user is at.
      */
 
+    //TODO: FIGURE OUT WHY THE VALUE WHEN PASSED EX -> 0 FIRST INT AND 1561515 FOR THE SECOND INT GOES BACK TO SECOND NUMBER AND THEN INFINITE CALLSTACK.
+
     public void sum(boolean firstOrSecondNumber) {
         if (firstOrSecondNumber) {
             try {
                 System.out.println(FIRST);
                 valuePassed = KEYBOARD.nextInt();
                 if (valuePassed < 0) {
-                    throw new InputMismatchException(ERROR);
+                    throw new InputMismatchException(SECOND_ERROR + valuePassed);
                 }
             } catch (InputMismatchException e) {
                 System.out.println(e.getMessage());
                 KEYBOARD.nextLine();
-                sum(true);
+                sumSecondChance(true);
             }
             sum(false);
+            //TODO: FIX THE STRUCTURE OF THE SECOND BOOLEAN VALUE
         } else {
             try {
                 System.out.println(SECOND);
                 secondValuePassed = KEYBOARD.nextInt();
                 if (secondValuePassed < 0) {
-                    throw new InputMismatchException(ERROR);
+                    throw new InputMismatchException(SECOND_ERROR + valuePassed);
                 }
             } catch (InputMismatchException e) {
-                System.out.println(e.getMessage());
-                KEYBOARD.nextLine();
-                sum(false);
+                    System.out.println(e.getMessage());
+                    KEYBOARD.nextLine();
+                    sumSecondChance(false);
+                }
             }
-            System.out.printf("The Sum of %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
-
+            System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
         }
-    }
+
+        public void sumSecondChance(boolean isFirst) {
+            String goodBye = "The value you passed was still incorrect\nThe program will now close... goodbye!\n";
+            System.out.println(SECOND_ATTEMPT);
+            if (isFirst) {
+                try {
+                    System.out.println(FIRST);
+                    valuePassed = KEYBOARD.nextInt();
+                    if (valuePassed < 0) {
+                        throw new InputMismatchException(goodBye);
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
+                }
+            } else {
+                try {
+                    System.out.println(SECOND);
+                    secondValuePassed = KEYBOARD.nextInt();
+                    if (secondValuePassed < 0) {
+                        throw new InputMismatchException(goodBye);
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
+                }
+            }
+            System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
+        }
 
     /**
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html">Java Streams api</a> ->
@@ -109,7 +147,7 @@ public class MainLogic {
      * @see <a href=""></a>
      */
 
-    public void sumArray() {
+    public void sumArrayHandler() {
         try {
             System.out.println("Enter the elements: ");
             int n = KEYBOARD.nextInt();
@@ -128,7 +166,7 @@ public class MainLogic {
         } catch (InputMismatchException e) {
             System.out.println(e.getMessage());
             KEYBOARD.nextLine();
-            sumArray();
+            sumArrayHandler();
         }
     }
 
