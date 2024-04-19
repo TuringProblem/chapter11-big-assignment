@@ -12,12 +12,18 @@ public class MainLogic {
     Scanner KEYBOARD = new Scanner(System.in);
     private int valuePassed; //First value that's passed by the user
     private int secondValuePassed; //Second value that's passed by the user
-    public String userInput;
-    private  final String ERROR = "That value is not an Int\nPlease make sure your input is a valid integer\n"; //TODO: FIX THIS AND ADD ANOTHER ERROR MESSAGE SO IM NOT USING THE SAME ONE
+    public String userInput; //Used for the User
+
+    /**
+     * @see MainLogic -> These are the main String values that are for the prompt, and error messages
+     */
+
+    private static final String ERROR = "That value is not an Int\nPlease make sure your input is a valid integer\n";
     public final String SECOND_ERROR = "Please enter a value that greater than: ";
     private  final String FIRST = "Please enter the first number: ";
     private final String SECOND = "Enter a second value: ";
-    private final String SECOND_ATTEMPT = "This is your last attempt\nPlease make sure to input the correct value\n";
+    private static final String SECOND_ATTEMPT = "This is your last attempt\nPlease make sure to input the correct value\n";
+
     /**
      * Use of Ternary operator for the cases.
      * if k1 > k2 then ret: 0
@@ -25,9 +31,7 @@ public class MainLogic {
      * else return the recursion of k1 + value of k1 + 1 + k2
      */
 
-    //TODO -> MAKE SURE THAT THE INTEGER VALUE
-
-    public int sumOfIntegers(int nOne, int nTwo) { return nOne > nTwo ? sumOfIntegers(nOne - 1, nTwo += nOne) : nOne == nTwo ? nOne : nTwo + sumOfIntegers(nOne + 1, nTwo); }
+    public int sumOfIntegers(int nOne, int nTwo) { return nOne > nTwo ? nOne + sumOfIntegers(nOne - 1, nTwo) : nOne == nTwo ? nOne : nOne + sumOfIntegers(nOne + 1, nTwo); }
 
 
 
@@ -66,7 +70,7 @@ public class MainLogic {
         KEYBOARD.nextLine();
         System.out.println("Would you like to go again?\n[Yes or No]: ");
         userInput = KEYBOARD.nextLine();
-        if (userInput.equalsIgnoreCase("yes")) {
+        if (userInput.equalsIgnoreCase("yes") || userInput.equalsIgnoreCase("ye") || userInput.equalsIgnoreCase("y")) {
             logic();
         } else {
             System.out.println("Thank you for playing!\n");
@@ -75,7 +79,7 @@ public class MainLogic {
     }
 
     /**
-     * Using -> {@link #sum(boolean)} -> This handles the logic behind {@link #sumOfIntegers(int, int)}
+     * Using -> This handles the logic behind {@link #sumOfIntegers(int, int)}
      * @param firstOrSecondNumber -> Boolean value that checks which section the user is at.
      */
 
@@ -86,7 +90,7 @@ public class MainLogic {
             try {
                 System.out.println(FIRST);
                 valuePassed = KEYBOARD.nextInt();
-                if (valuePassed < 0) {
+                if (valuePassed < 0 || valuePassed > 10000) {
                     throw new InputMismatchException(SECOND_ERROR + valuePassed);
                 }
             } catch (InputMismatchException e) {
@@ -95,12 +99,11 @@ public class MainLogic {
                 sumSecondChance(true);
             }
             sum(false);
-            //TODO: FIX THE STRUCTURE OF THE SECOND BOOLEAN VALUE
         } else {
             try {
                 System.out.println(SECOND);
                 secondValuePassed = KEYBOARD.nextInt();
-                if (secondValuePassed < 0) {
+                if (secondValuePassed < 0 || valuePassed >  10000) {
                     throw new InputMismatchException(SECOND_ERROR + valuePassed);
                 }
             } catch (InputMismatchException e) {
@@ -108,18 +111,19 @@ public class MainLogic {
                     KEYBOARD.nextLine();
                     sumSecondChance(false);
                 }
-            }
             System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
+            }
         }
 
         public void sumSecondChance(boolean isFirst) {
+            System.out.println();
             String goodBye = "The value you passed was still incorrect\nThe program will now close... goodbye!\n";
             System.out.println(SECOND_ATTEMPT);
             if (isFirst) {
                 try {
                     System.out.println(FIRST);
                     valuePassed = KEYBOARD.nextInt();
-                    if (valuePassed < 0) {
+                    if (valuePassed < 0 || valuePassed > 100000) {
                         throw new InputMismatchException(goodBye);
                     }
                 } catch (InputMismatchException e) {
@@ -130,15 +134,15 @@ public class MainLogic {
                 try {
                     System.out.println(SECOND);
                     secondValuePassed = KEYBOARD.nextInt();
-                    if (secondValuePassed < 0) {
+                    if (secondValuePassed < 0 || valuePassed > 100000) {
                         throw new InputMismatchException(goodBye);
                     }
                 } catch (InputMismatchException e) {
                     System.out.println(e.getMessage());
                     System.exit(0);
                 }
+                System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
             }
-            System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
         }
 
     /**
