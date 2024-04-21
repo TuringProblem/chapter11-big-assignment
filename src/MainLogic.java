@@ -22,26 +22,21 @@ public class MainLogic {
     public final String SECOND_ERROR = "Please enter a value that greater than: ";
     private  final String FIRST = "Please enter the first number: ";
     private final String SECOND = "Enter a second value: ";
-    private static final String SECOND_ATTEMPT = "This is your last attempt\nPlease make sure to input the correct value\n";
+    private static final String SECOND_ATTEMPT = "This is your last attempt\nPlease make sure to input the correct value:\n[ie] Number greater than 0 and less than 10000\n";
 
     /**
-     * Use of Ternary operator for the cases.
-     * if k1 > k2 then ret: 0
-     * else if k1 equals k2 return k1
-     * else return the recursion of k1 + value of k1 + 1 + k2
+     * @param nOne -> First number passed by the user
+     * @param nTwo -> Second number passed by the user.
+     * @return -> If nOne > nTwo then it just flips decrements nOne value using the recursion method and then adding the values :
+     *              -> else if the values are equal, then the value remains the same -> else it increments using the recursion method, adding teh nOne integers.
      */
 
     public int sumOfIntegers(int nOne, int nTwo) { return nOne > nTwo ? nOne + sumOfIntegers(nOne - 1, nTwo) : nOne == nTwo ? nOne : nOne + sumOfIntegers(nOne + 1, nTwo); }
 
-
-
     /**
-     * Use of ternary operator for each case.
-     * Write a static recursive method that returns the sum of the integers
-     * in the array of int values passed to it as a single argument.
-     * Test your method in a program that prompts the user to input the length of the array,
-     * and then has them enter the int at every index of the array
-     * Then, it should print the sum of the array using the recursive method you wrote.
+     * @param array -> Takes in an int[] array based on the value passed by the user
+     * @param length -> Checks the length of the array, and makes sure that the length is != 0
+     * @return -> if length == 0 then it returns 0 else it returns the recursion method which deducts the value by one and adds the value passed by the user.
      */
 
     public int sumArray(int[] array, int length) { return length == 0 ? 0 : sumArray(array, length - 1) + array[length - 1]; }
@@ -79,11 +74,17 @@ public class MainLogic {
     }
 
     /**
+     * Just writes the output for the values passed.
+     */
+
+    public void writeOutPut() {
+        System.out.printf("The Sum of all integers between %d and %d is: %d \n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
+    }
+
+    /**
      * Using -> This handles the logic behind {@link #sumOfIntegers(int, int)}
      * @param firstOrSecondNumber -> Boolean value that checks which section the user is at.
      */
-
-    //TODO: FIGURE OUT WHY THE VALUE WHEN PASSED EX -> 0 FIRST INT AND 1561515 FOR THE SECOND INT GOES BACK TO SECOND NUMBER AND THEN INFINITE CALLSTACK.
 
     public void sum(boolean firstOrSecondNumber) {
         if (firstOrSecondNumber) {
@@ -103,7 +104,7 @@ public class MainLogic {
             try {
                 System.out.println(SECOND);
                 secondValuePassed = KEYBOARD.nextInt();
-                if (secondValuePassed < 0 || valuePassed >  10000) {
+                if (secondValuePassed < 0 || secondValuePassed >  10000) {
                     throw new InputMismatchException(SECOND_ERROR + valuePassed);
                 }
             } catch (InputMismatchException e) {
@@ -111,11 +112,17 @@ public class MainLogic {
                     KEYBOARD.nextLine();
                     sumSecondChance(false);
                 }
-            System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
+            writeOutPut();
             }
         }
 
-        public void sumSecondChance(boolean isFirst) {
+    /**
+     *
+     * @param isFirst -> If isFirst = true -> the incorrect value was the first integer:
+     *                else the incorrect value is the second integer.
+     */
+
+    public void sumSecondChance(boolean isFirst) {
             System.out.println();
             String goodBye = "The value you passed was still incorrect\nThe program will now close... goodbye!\n";
             System.out.println(SECOND_ATTEMPT);
@@ -134,26 +141,25 @@ public class MainLogic {
                 try {
                     System.out.println(SECOND);
                     secondValuePassed = KEYBOARD.nextInt();
-                    if (secondValuePassed < 0 || valuePassed > 100000) {
+                    if (secondValuePassed < 0 || secondValuePassed > 100000) {
                         throw new InputMismatchException(goodBye);
                     }
                 } catch (InputMismatchException e) {
                     System.out.println(e.getMessage());
                     System.exit(0);
                 }
-                System.out.printf("The Sum from  %d to %d = %d\n", valuePassed, secondValuePassed, sumOfIntegers(valuePassed, secondValuePassed));
             }
         }
 
     /**
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html">Java Streams api</a> ->
-      Using List to pipeline the data collected from the user, instead of Array for efficiency.
-     * @see <a href=""></a>
+     * Using Stram to pipeline the data collected from the user, this allows me to take a collection (such as an array) : pass it a function :
+     * and store that data into a new collection or into the same array (in this case using same array).
      */
 
     public void sumArrayHandler() {
         try {
-            System.out.println("Enter the elements: ");
+            System.out.println("Enter the amount of elements in the array: ");
             int n = KEYBOARD.nextInt();
             if (n < 0 || n > 50) { throw new InputMismatchException(ERROR); }
             int[] num = IntStream.range(0, n).map(i -> {
@@ -166,7 +172,7 @@ public class MainLogic {
                 return userInt;
             }).toArray();
             int sum = sumArray(num, n);
-            System.out.printf("The sum of the Array from %d  is: %d\n", n, sum);
+            System.out.printf("The sum of the %d elements is: %d\n", n, sum);
         } catch (InputMismatchException e) {
             System.out.println(e.getMessage());
             KEYBOARD.nextLine();
